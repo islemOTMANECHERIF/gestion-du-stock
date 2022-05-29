@@ -1,0 +1,360 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct stock
+{
+    int numero;
+    char nom[200];
+    int quantite;
+};
+struct stock stock;
+
+struct stockmis
+{
+
+    int numeroo;
+    char nomm[200];
+    int quantitee;
+};
+struct stockmis stockmis;
+
+int rech(int numrech)
+{
+    FILE *f;
+    f = fopen("fichierstock.txt", "r");
+    if (f == NULL)
+    {
+        printf(" ERROR 404 *_* ");
+    }
+    else
+    {
+        while (!feof(f))
+        {
+
+            fscanf(f, "%d\t%s\t%d\n", &stock.numero, &stock.nom, &stock.quantite);
+            fflush(stdin);
+            if (stock.numero == numrech)
+            {
+                return 1;
+            }
+        }
+    }
+
+    fclose(f);
+}
+
+void ajouterarticle() // 1  AJOUT
+{
+    FILE *f;
+    int num;
+    int teste = 0;
+    f = fopen("fichierstock.txt", "a");
+    printf("\n Entrer le numero du nouveau article :");
+    scanf("%d", &stock.numero);
+    fflush(stdin);
+    if (f == NULL)
+    {
+        printf("erreur");
+    }
+    else
+    {
+
+        printf("\n Entrer le nom de l'article :");
+        scanf("%s", &stock.nom);
+        fflush(stdin);
+        printf("\n Entrer la quantite :");
+        scanf("%d", &stock.quantite);
+        fflush(stdin);
+        fprintf(f, "%d %s %d\n", stock.numero, stock.nom, stock.quantite);
+        fflush(stdin);
+        fclose(f);
+        f = NULL;
+    }
+}
+void misajour() // MIS A JOUR
+{
+
+    FILE *f2;
+    f2 = fopen("fichiermouvement.txt", "a");
+
+    if (f2 == NULL)
+    {
+    	printf(" ERROR 404 *_* ");
+    }
+    else
+    {
+        printf("------------- REAPPROVISIONNEMENT EN COURS -------------\n");
+        printf("\nEntrez la Reference du nouveau article : \t");
+        scanf("%d", &stockmis.numeroo);
+        fflush(stdin);
+        printf("\n Entrez le Nom du nouveau article : \t");
+        scanf("%s", &stockmis.nomm);
+        fflush(stdin);
+        printf("\n Entrez la Quantite du nouveau article : \t");
+        scanf("%d", &stockmis.quantitee);
+        fflush(stdin);
+
+        fprintf(f2, "%d %s %d\n", stockmis.numeroo, stockmis.nomm, stockmis.quantitee);
+    }
+    fclose(f2);
+}
+
+void recherche() // 2 RECHERCHE D'UN ARTICLE
+{
+    int numrech;
+    printf("Entrer le numero de l'article a rechercher \n ");
+    scanf("%d", &numrech);
+    FILE *f;
+    f = fopen("fichierstock.txt", "r");
+    do
+    {
+        fscanf(f, "%d %s %d\n", &stock.numero, &stock.nom, &stock.quantite);
+        if (numrech == stock.numero)
+        {
+            printf("------------------------------------------\n");
+            printf("------- Information sur l'article --------\n");
+            printf("------------------------------------------\n \n");
+            printf(" Numero : \t  %d \n", stock.numero);
+            printf(" Nom   : \t  %s \n", stock.nom);
+            printf(" Quantite : \t %d \n", stock.quantite);
+        }
+    } while (!feof(f));
+    fflush(stdin);
+    fclose(f);
+    f = NULL;
+}
+void supprimerarticle() // 3 SUPPRESSION
+{
+    char rep;
+    int numrech;
+    int teste;
+    FILE *f = NULL;
+    f = fopen("fichierstock.txt", "r");
+    printf("Entrer le numero de l'article a supprimer :");
+    scanf("%d", &numrech);
+    fflush(stdin);
+    if (f == NULL)
+    {
+    	printf(" ERROR 404 *_* ");
+    }
+    else
+    {
+        if (stock.numero == numrech)
+        {
+            teste = 1;
+        }
+        if (teste = 1)
+        {
+            printf("Vous voulez vraiment supprimer l'article? \n ");
+            printf(" taper (o) pour confirmer \n");
+            printf(" taper (n) pour annuler \n");
+            scanf("%c", &rep);
+
+            if (rep == 'o' || rep == 'O')
+            {
+
+                FILE *fi = NULL;
+
+                fi = fopen("fichiertempo.txt", "a");
+                while (fscanf(f, "%d\t%s\t%d\n", &stock.numero, &stock.nom, &stock.quantite) != EOF)
+                {
+
+                    if (numrech != stock.numero)
+                    {
+                        fprintf(fi, "%d %s %d\n", stock.numero, stock.nom, stock.quantite);
+                    }
+                }
+
+                fflush(stdin);
+
+                fclose(f);
+
+                fclose(fi);
+
+                remove("fichierstock.txt");
+                rename("fichiertempo.txt", "fichierstock.txt");
+                printf("Suppression effectuer avec succee \n");
+            }
+        }
+        else
+
+        {
+            printf("\n Ce numero n'existe pas ");
+        }
+    }
+}
+
+void modifierarticle() // 4 MODIFICATION
+{
+    FILE *f;
+    f = fopen("fichierstock.txt", "r");
+    int num;
+    char rep = 'n';
+    int teste;
+    printf("\n Entrer le numero de l'article a modifier :");
+    scanf("%d", &num);
+    fflush(stdin);
+    if (f == NULL)
+    {
+    	printf(" ERROR 404 *_* ");
+    }
+    else
+    {
+
+        if (stock.numero == num)
+        {
+            teste = 1;
+        }
+
+        if (teste = 1)
+        {
+
+            printf("\n Vous voulez vraiment modifier ce article? o/n ? \n");
+            printf(" taper (o) pour confirmer \n");
+            printf(" taper (n) pour annuler \n");
+            scanf("%c", &rep);
+
+            if (rep == 'O' || rep == 'o')
+            {
+                FILE *fich;
+
+                fich = fopen("fichiertempo.txt", "a");
+                do
+                {
+                    fscanf(f, "%d %s %d\n", &stock.numero, &stock.nom, &stock.quantite);
+                    if (num == stock.numero)
+                    {
+                        printf("\n Entrer le nouveau nom : ");
+                        scanf("%s", &stock.nom);
+                        printf("\n Entrer la nouvelle quantiter :");
+                        scanf("%d", &stock.quantite);
+                    }
+                    fprintf(fich, "%d %s %d\n", stock.numero, stock.nom, stock.quantite);
+                } while (!feof(f));
+                fflush(stdin);
+                fclose(f);
+                fclose(fich);
+                f = NULL;
+                remove("fichierstock.txt");
+                rename("fichiertempo.txt", "fichierstock.txt");
+                printf("\n Modification  effectuee avec succees. ");
+            }
+            else
+            {
+
+                printf("\n la modification a ete annuler \n");
+            }
+        }
+
+        else
+        {
+            printf("\n Ce numero d'article n'existe pas \n");
+        }
+    }
+}
+void affichertout() // 5 AFFICHAGE
+{
+    FILE *f;
+    f = fopen("fichierstock.txt", "r");
+    printf("La liste des articles: \n \n");
+    printf(" Referance\t Nom\t Quantite \n");
+    do
+    {
+        fscanf(f, "%d %s %d\n", &stock.numero, &stock.nom, &stock.quantite);
+        fflush(stdin);
+        printf("     %d\t\t", stock.numero);
+        printf("%s\t", stock.nom);
+        printf("    %d\t", stock.quantite);
+        printf("\n");
+    } while (!feof(f));
+    fflush(stdin);
+    fclose(f);
+}
+
+void fusion() // FUSION
+{
+    FILE *f1;
+    FILE *f2;
+    f1 = fopen("fichierstock.txt", "a");
+    f2 = fopen("fichiermouvement.txt", "r");
+    if (f1 == NULL || f2 == NULL)
+    {
+    	printf(" ERROR 404 *_* ");
+    }
+    else
+    {
+        while (!feof(f2))
+        {
+            fscanf(f2, "%d %s %d\n", &stockmis.numeroo, &stockmis.nomm, &stockmis.quantitee);
+            fflush(stdin);
+            fprintf(f1, "%d %s %d\n", stockmis.numeroo, stockmis.nomm, stockmis.quantitee);
+        }
+    }
+    fclose(f2);
+    fclose(f1);
+    remove("fichiermouvement.txt");
+    printf("Mise a Jour effectuer avec succee \n");
+}
+
+main()
+{
+    int choix;
+    char rep;
+    do
+    {
+        system("cls");
+        printf("************************MENU************************\n");
+        printf("------------------------------------------\n");
+        printf("1- Ajouter Un Article \n");
+        printf("------------------------------------------\n");
+        printf("2- Rechercher Un Article \n");
+        printf("------------------------------------------\n");
+        printf("3- Supprimer Un Article  \n");
+        printf("------------------------------------------\n");
+        printf("4- Modifier Un Article \n");
+        printf("------------------------------------------\n");
+        printf("5- Afficher Tous Les Articles \n");
+        printf("------------------------------------------\n");
+        printf("6- Reapprovisionnement d'article\n");
+        printf("------------------------------------------\n");
+        printf("7- Mettre a jour le stock    \n");
+        printf("------------------------------------------\n");
+
+        do
+        {
+            printf("\n -Entrer Votre Choix :");
+            scanf("%d", &choix);
+        } while (choix < 1 || choix > 7);
+        switch (choix)
+        {
+        case 1:
+            ajouterarticle();
+            break;
+        case 2:
+            recherche();
+            break;
+        case 3:
+            supprimerarticle();
+            break;
+        case 4:
+            modifierarticle();
+            break;
+        case 5:
+            affichertout();
+            break;
+        case 6:
+            misajour();
+            break;
+        case 7:
+            fusion();
+            break;
+        }
+        printf("\n Vous les vous continuez o/n ? \n ");
+        printf(" taper (o) pour continuez \n");
+        printf(" taper (n) pour annuler \n");
+        scanf("%c", &rep);
+        fflush(stdin);
+    } while (rep == 'o' || rep == 'O');
+}
+
